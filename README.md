@@ -1,6 +1,9 @@
 # Social Media Post Generator
-![Screenshot 2024-12-31 121216](https://github.com/user-attachments/assets/bffd1f1a-a63b-41d5-b8ee-d940f416023a)
-![Screenshot 2024-12-31 121158](https://github.com/user-attachments/assets/0a9b4785-6c28-4168-bff2-ea5b195bce62)
+![image](https://github.com/user-attachments/assets/7abae1da-d9df-4306-8e6f-9900148c1af4)
+*Fig.1 Landing Page*
+
+![image](https://github.com/user-attachments/assets/14b15ba9-b933-4025-a9e6-7054aea8bf00)
+*Fig.2 Sample Output*
 
 ## Overview
 
