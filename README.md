@@ -1,4 +1,6 @@
 # Social Media Post Generator
+![Screenshot 2024-12-31 121216](https://github.com/user-attachments/assets/bffd1f1a-a63b-41d5-b8ee-d940f416023a)
+![Screenshot 2024-12-31 121158](https://github.com/user-attachments/assets/0a9b4785-6c28-4168-bff2-ea5b195bce62)
 
 ## Overview
 
@@ -33,7 +35,6 @@ The tool addresses the challenge of creating engaging and consistent social medi
 
 - Python 3.x
 - Node.js (for frontend dependencies)
-- Docker (optional)
 
 ### Backend Setup
 
@@ -54,6 +55,11 @@ The tool addresses the challenge of creating engaging and consistent social medi
 
    ```plaintext
    GROK_API_KEY=your_api_key_here
+   
+4. Run main.py
+   ```bash
+   fastapi dev main.py
+
 ## Frontend Setup
 
 1. Navigate to the frontend directory:
