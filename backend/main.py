@@ -69,7 +69,7 @@ load_dotenv()
 
 # Retrieve the GROK_API_KEY from environment variables
 api_key = os.getenv("GROK_API_KEY")
-
+print(api_key)
 
 
 # Headers for authentication

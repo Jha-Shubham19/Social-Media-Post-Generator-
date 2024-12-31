@@ -1,163 +1,192 @@
-import React, { useState } from 'react';
-import axios from 'axios';
+import React, { useState } from "react";
+import "./index.css";
+import ReactMarkdown from "react-markdown";
+import axios from "axios";
+export default function App() {
+  const [formData, setFormData] = useState({
+    platform: "",
+    tone: "",
+    template: "",
+    raw_content: "",
+  });
+  const [modalContent, setModalContent] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-const App = () => {
-    const [formData, setFormData] = useState({
-        platform: '',
-        tone: '',
-        template: '',
-        raw_content: ''
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setModalContent("Loading...");
+    setIsModalOpen(true);
+    const response = await axios.get("http://127.0.0.1:8000/", {
+        params: formData
     });
-    const [modalContent, setModalContent] = useState("");
-    const [isModalOpen, setIsModalOpen] = useState(false);
-
-  
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData({ ...formData, [name]: value });
-    };
-
-    const handleSubmit = async (e) => {
-      e.preventDefault();
-      try {
-          console.log(formData);
-          const response = await axios.get("http://127.0.0.1:8000/", {
-              params: formData
-          });
-          console.log(response.data.response.choices[0].message.content);
-          setModalContent(response.data.response.choices[0].message.content);
-          setIsModalOpen(true);
-      } catch (error) {
-          console.error("Error submitting form:", error);
-          alert("Failed to submit the form. Please try again.");
-      }
+    console.log(response.data.response.choices[0].message.content);
+    setModalContent(response.data.response.choices[0].message.content);
   };
 
   const handleCopy = () => {
     navigator.clipboard.writeText(modalContent);
     alert("Content copied to clipboard!");
-};
+  };
 
-const closeModal = () => {
+  const closeModal = () => {
     setIsModalOpen(false);
     setModalContent("");
-};
+  };
 
-    return (
-        <div style={{ padding: "20px", maxWidth: "400px", margin: "auto" }}>
-            <h1>Post Generator 🚀</h1>
-            <form onSubmit={handleSubmit}>
-                {/* Platform Dropdown */}
-                <div style={{ marginBottom: "10px" }}>
-                    <label htmlFor="platform">Platform:</label>
-                    <select
-                        id="platform"
-                        name="platform"
-                        value={formData.platform}
-                        onChange={handleChange}
-                        required
-                    >
-                        <option value="">Select a platform</option>
-                        <option value="LinkedIn">LinkedIn</option>
-                        <option value="Twitter">Twitter</option>
-                    </select>
-                </div>
-
-                {/* Tone Dropdown */}
-                <div style={{ marginBottom: "10px" }}>
-                    <label htmlFor="tone">Tone:</label>
-                    <select
-                        id="tone"
-                        name="tone"
-                        value={formData.tone}
-                        onChange={handleChange}
-                        required
-                    >
-                        <option value="">Select a tone</option>
-                        <option value="Professional">Professional</option>
-                        <option value="Casual">Casual</option>
-                        <option value="Inspirational">Inspirational</option>
-                    </select>
-                </div>
-
-                {/* Template Dropdown */}
-                <div style={{ marginBottom: "10px" }}>
-                    <label htmlFor="template">Template:</label>
-                    <select
-                        id="template"
-                        name="template"
-                        value={formData.template}
-                        onChange={handleChange}
-                        required
-                    >
-                        <option value="">Select a template</option>
-                        <option value="event_promotion">Event Promotion</option>
-                        <option value="thought_leadership">Thought Leadership</option>
-                        <option value="information_sharing">Information Sharing</option>
-                        <option value="hiring">Hiring</option>
-                    </select>
-                </div>
-
-                {/* Raw Content Field */}
-                <div style={{ marginBottom: "10px" }}>
-                    <label htmlFor="raw_content">Raw Content:</label>
-                    <textarea
-                        id="raw_content"
-                        name="raw_content"
-                        value={formData.raw_content}
-                        onChange={handleChange}
-                        rows="3"
-                        placeholder="Enter 1 to 2 lines of information..."
-                        required
-                    ></textarea>
-                </div>
-
-                {/* Submit Button */}
-                <button type="submit">Submit</button>
-            </form>
-
-             {/* Modal */}
-             {isModalOpen && (
-                <div style={{
-                    position: "fixed",
-                    top: 0,
-                    left: 0,
-                    width: "100%",
-                    height: "100%",
-                    backgroundColor: "rgba(0, 0, 0, 0.5)",
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                }}>
-                    <div style={{
-                        background: "#fff",
-                        padding: "20px",
-                        borderRadius: "8px",
-                        maxWidth: "500px",
-                        width: "100%",
-                        textAlign: "center",
-                    }}>
-                        <h2 style={{color:"#000"}}>Response</h2>
-                        <textarea
-                            value={modalContent}
-                            style={{
-                                width: "100%",
-                                height: "350px",
-                                marginBottom: "10px",
-                                padding: "10px",
-                                border: "1px solid #ccc",
-                                borderRadius: "4px",
-                                fontSize: "1rem",
-                            }}
-                            onChange={(e) => setModalContent(e.target.value)}
-                        ></textarea>
-                        <button onClick={handleCopy} style={{ marginRight: "10px" }}>Copy</button>
-                        <button onClick={closeModal}>Close</button>
-                    </div>
-                </div>
-            )}
+  return (
+    <>
+      <header className="header">
+        <div className="brand">
+          <svg className="logo" viewBox="0 0 40 40">
+            <circle cx="20" cy="20" r="18" fill="#646cff" />
+            <path d="M15 15 L25 20 L15 25z" fill="white" />
+          </svg>
+          <h2>Post Generator AI</h2>
         </div>
-    );
-};
+      </header>
 
-export default App;
+      <div className="container">
+        <div className="split-layout">
+          <div className="illustration">
+            <svg viewBox="0 0 500 500">
+              <defs>
+                <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop
+                    offset="0%"
+                    style={{ stopColor: "#646cff", stopOpacity: 1 }}
+                  />
+                  <stop
+                    offset="100%"
+                    style={{ stopColor: "#8547c6", stopOpacity: 1 }}
+                  />
+                </linearGradient>
+              </defs>
+              <circle
+                cx="250"
+                cy="250"
+                r="150"
+                fill="none"
+                stroke="url(#grad)"
+                strokeWidth="2"
+              />
+              <path
+                d="M200,200 C200,150 300,150 300,200 S400,250 400,300"
+                stroke="#646cff"
+                fill="none"
+              />
+              <circle cx="250" cy="250" r="50" fill="#f0f0ff" />
+              <path d="M230,270 L270,270 L250,230 Z" fill="#646cff" />
+            </svg>
+          </div>
+
+          <div className="form-section">
+            <div className="glass-form">
+              <h1>Create Your Post ✨</h1>
+
+              <form onSubmit={handleSubmit}>
+                <div className="form-group">
+                  <label>Platform</label>
+                  <select
+                    name="platform"
+                    value={formData.platform}
+                    onChange={handleChange}
+                    required
+                  >
+                    <option value="">Choose platform</option>
+                    <option value="LinkedIn">LinkedIn</option>
+                    <option value="Twitter">Twitter</option>
+                  </select>
+                </div>
+
+                <div className="form-group">
+                  <label>Tone</label>
+                  <select
+                    name="tone"
+                    value={formData.tone}
+                    onChange={handleChange}
+                    required
+                  >
+                    <option value="">Select tone</option>
+                    <option value="Professional">Professional</option>
+                    <option value="Casual">Casual</option>
+                    <option value="Inspirational">Inspirational</option>
+                  </select>
+                </div>
+
+                <div className="form-group">
+                  <label>Template</label>
+                  <select
+                    name="template"
+                    value={formData.template}
+                    onChange={handleChange}
+                    required
+                  >
+                    <option value="">Choose template</option>
+                    <option value="event_promotion">Event Promotion</option>
+                    <option value="thought_leadership">
+                      Thought Leadership
+                    </option>
+                    <option value="information_sharing">
+                      Information Sharing
+                    </option>
+                    <option value="hiring">Hiring</option>
+                  </select>
+                </div>
+
+                <div className="form-group">
+                  <label>Content</label>
+                  <textarea
+                    name="raw_content"
+                    value={formData.raw_content}
+                    onChange={handleChange}
+                    placeholder="Enter your content here..."
+                    rows="4"
+                    required
+                  ></textarea>
+                </div>
+
+                <button type="submit" className="gradient-button">
+                  Generate ✨
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        {isModalOpen && (
+          <div className="modal">
+            <div className="modal-content">
+              <h2>Generated Post</h2>
+              <div className="markdown-preview">
+                <ReactMarkdown>{modalContent}</ReactMarkdown>
+              </div>
+              {/* <textarea
+                value={modalContent}
+                onChange={(e) => setModalContent(e.target.value)}
+              ></textarea> */}
+              <div className="modal-buttons">
+                <button
+                  onClick={handleCopy}
+                  className="gradient-button copy-button"
+                >
+                  Copy to Clipboard
+                </button>
+                <button
+                  onClick={closeModal}
+                  className="gradient-button close-button"
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    </>
+  );
+}
