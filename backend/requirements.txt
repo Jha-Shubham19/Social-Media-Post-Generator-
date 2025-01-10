@@ -1,4 +1,5 @@
 fastapi[standard]
 httpx
 uvicorn
+google.generativeai
 # python-doten

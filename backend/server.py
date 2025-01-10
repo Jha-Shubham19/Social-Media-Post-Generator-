@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 import httpx
 from dotenv import load_dotenv
+import google.generativeai as genai
 import os
 
 # Updated Templates dictionary
@@ -56,54 +57,23 @@ app = FastAPI()
 # Configure CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Add your frontend origin
+    allow_origins=["*","http://localhost:5173"],  # Add your frontend origin
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# API endpoint and API key
-url = "https://api.x.ai/v1/chat/completions"  # Replace with the actual API endpoint
-# Load environment variables from .env file
 load_dotenv()
+api_key = os.getenv("GEMINI_API_KEY")
+genai.configure(api_key=api_key)
+model = genai.GenerativeModel("gemini-1.5-flash")
 
-# Retrieve the GROK_API_KEY from environment variables
-api_key = os.getenv("GROK_API_KEY")
-print(api_key)
 
-
-# Headers for authentication
-headers = {
-    "Authorization": f"Bearer {api_key}",
-    "Content-Type": "application/json"
-}
-
-async def ask_grok(initial_prompt):
-    # data = {
-    #     "prompt": initial_prompt
-    # }
-     # Payload with chat messages and model parameters
-    data = {
-        "messages": [
-            {
-                "role": "system",
-                "content": "You are Social Media Post Helper, a chatbot that assists with creating engaging social media content"
-            },
-            {
-                "role": "user",
-                "content": initial_prompt
-            }
-        ],
-        "model": "grok-2-1212",
-        "stream": False,
-        "temperature": 0,
-    }
+async def ask_gemini(initial_prompt):
     try:
-        # Make the POST request
-        async with httpx.AsyncClient() as client:
-            response = await client.post(url, json=data, headers=headers)
-        print(response.json())
-        return response.json()
+        response = model.generate_content(initial_prompt)
+        # print(response)
+        return response.text
     except Exception as e:
         print(e)
         return None
@@ -111,6 +81,7 @@ async def ask_grok(initial_prompt):
 
 @app.get("/")
 async def root(request: Request):
+    # print(request)
     bot = request.query_params
     platform = bot.get("platform")
     tone = bot.get("tone")
@@ -124,6 +95,6 @@ async def root(request: Request):
     )    
     
     
-    response = await ask_grok(initial_prompt)
+    response = await ask_gemini(initial_prompt)
     return {"message": initial_prompt, "response": response}
     

@@ -21,11 +21,11 @@ export default function App() {
     e.preventDefault();
     setModalContent("Loading...");
     setIsModalOpen(true);
-    const response = await axios.get("http://127.0.0.1:8000/", {
+    const response = await axios.get(import.meta.env.VITE_BACKEND_URL+"/", {
         params: formData
     });
-    console.log(response.data.response.choices[0].message.content);
-    setModalContent(response.data.response.choices[0].message.content);
+    // console.log(response.data.response);
+    setModalContent(response.data.response);
   };
 
   const handleCopy = () => {
